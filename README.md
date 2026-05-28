@@ -3,7 +3,7 @@
 > Deployed locally using **kind** (Kubernetes IN Docker). No cloud account needed.
 > Part of my DevOps engineering training — documenting everything publicly.
 
-![All 11 pods Running](./screenshots/LOCAL_07_all_pods_running.png)
+![All 11 pods Running](./images/LOCAL_07_all_pods_running.png)
 *All 11 services Running. Zero restarts.*
 
 ---
@@ -33,12 +33,70 @@ kubectl port-forward deployment/frontend 8080:8080
 
 ---
 
+## Environment Setup
+
+Before anything runs, these are the tool versions used in this deployment.
+
+![Tool versions](./images/LOCAL_01_tool_versions.png)
+*Docker, kind, and kubectl versions confirmed before starting.*
+
+---
+
+## Cluster Creation
+
+![kind cluster created](./images/online_boutique_created.png)
+*kind cluster spun up successfully.*
+
+![kind start output](./images/LOCAL_03_kind_start_output.png)
+*kind bootstrapping the control plane and worker node inside Docker.*
+
+![kubectl get nodes](./images/LOCAL_04_kubectl_get_nodes.png)
+*One node, Ready status. The cluster is live.*
+
+---
+
+## Repo Structure
+
+![Repo folder structure](./images/LOCAL_02_repo_folder_structure.png)
+*The microservices-demo repo after cloning. The `release/` folder holds the manifests we apply.*
+
+---
+
+## Deploying the App
+
+![kubectl apply output](./images/LOCAL_05_kubectl_apply_output.png)
+*All 11 Kubernetes resources created in one command.*
+
+Pods do not start instantly. They go through `Pending` and `ContainerCreating` first while Kubernetes pulls images and schedules workloads.
+
+![Pods in Pending and ContainerCreating](./images/LOCAL_06_pods_pending_containerCreating.png)
+*Normal behavior. Nothing is broken here — images are still being pulled.*
+
+Once all images are pulled and containers start, every pod moves to `Running`.
+
+![All 11 pods Running](./images/LOCAL_07_all_pods_running.png)
+*All 11 services Running. Zero restarts.*
+
+![kubectl get services](./images/LOCAL_08_kubectl_get_services.png)
+*Services and their ClusterIP addresses. The frontend service is the entry point.*
+
+---
+
 ## The App
 
-![Online Boutique Homepage](./screenshots/LOCAL_09_homepage.png)
+![Online Boutique Homepage](./images/LOCAL_09_homepage.png)
 *Online Boutique running at localhost:8080*
 
 An e-commerce store made up of **11 microservices across 5 programming languages**, all communicating over gRPC.
+
+![Product detail page](./images/LOCAL_10_product_detail.png)
+*Navigating to a product — frontend is calling productcatalogservice and recommendationservice behind the scenes.*
+
+![Add to cart](./images/LOCAL_11_add_to_cart.png)
+*Adding an item to the cart — cartservice storing the session in Redis over gRPC.*
+
+![Checkout complete](./images/LOCAL_12_checkout_complete.png)
+*Full checkout completed. checkoutservice coordinated 6 services to make this happen.*
 
 ---
 
@@ -81,6 +139,26 @@ shippingservice               1/1     Running   0
 
 ---
 
+## Inspecting a Running Pod
+
+![kubectl describe pod frontend A](./images/LOCAL_13_describe_pod_A.png)
+*Pod metadata: node assignment, IP, image pulled, resource requests and limits.*
+
+![kubectl describe pod frontend B](./images/LOCAL_13_describe_pod_B.png)
+*Events section — shows the full lifecycle: Scheduled, Pulled, Created, Started.*
+
+![kubectl logs frontend](./images/LOCAL_14_kubectl_logs.png)
+*Live request logs from the frontend. The loadgenerator is already sending traffic.*
+
+---
+
+## Resource Usage
+
+![kubectl top pods](./images/LOCAL_15_kubectl_top_pods.png)
+*CPU and memory consumption across all pods. adservice and frontend are the heaviest.*
+
+---
+
 ## Fault Injection Experiment
 
 After confirming everything was healthy, I injected a CPU stressor into `recommendationservice`:
@@ -88,6 +166,9 @@ After confirming everything was healthy, I injected a CPU stressor into `recomme
 ```bash
 kubectl exec -it deployment/recommendationservice -- sh -c "while true; do true; done"
 ```
+
+![After fault injection](./images/fault_injection_result.png)
+*The recommendation service under CPU pressure. The rest of the app kept running normally.*
 
 **What happened:**
 - The recommendation service slowed down under CPU pressure
@@ -114,6 +195,9 @@ kubectl delete -f ./release/kubernetes-manifests.yaml
 kind delete cluster --name online-boutique
 ```
 
+![kubectl delete output](./images/LOCAL_16_kubectl_delete.png)
+*All 11 resources deleted cleanly.*
+
 ---
 
 ## Full Walkthrough
@@ -127,6 +211,6 @@ Step-by-step guide including architecture breakdown, troubleshooting, and the fu
 
 ## About
 
-**Vivian Chiamaka Okose** — DevOps Engineer in training, documenting the journey publicly.
+**Vivian Chiamaka Okose** — Cloud DevOps Engineer, documenting the journey publicly.
 
 [LinkedIn](https://linkedin.com/in/okosechiamaka) · [GitHub](https://github.com/vivianokose) · [X](https://x.com/vivianchiamaka)
