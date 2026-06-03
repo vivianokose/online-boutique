@@ -4,7 +4,7 @@ A production-grade DevOps project built on Google's [microservices-demo](https:/
 
 Built by [Vivian Chiamaka Okose](https://github.com/vivianokose) as part of a real-world DevOps engineering simulation at [Pawsible Cloud](https://github.com/pawsible-cloud).
 
-![Online Boutique live on AWS](.assets/screenshots/site_deployed_online_via_alb.png)
+![Online Boutique live on AWS](assets/screenshots/site%20deployed%20online%20via%20alb.png)
 
 ---
 
@@ -123,9 +123,9 @@ terraform plan
 terraform apply
 ```
 
-![Terraform init](assets/screenshots/terraform_init_II.png)
+![Terraform init](assets/screenshots/terraform%20init%20II.png)
 
-![Terraform apply complete](assets/screenshots/terraform_apply.png)
+![Terraform apply complete](assets/screenshots/terraform%20apply.png)
 
 After apply, connect kubectl:
 
@@ -143,11 +143,11 @@ GitHub Actions runs on every push to `main` or `vivian` branches.
 
 Eleven build jobs run in parallel — one per service. Each job builds the Docker image and pushes it to ECR. A single downstream job runs after all builds complete and updates `helm-chart/values.yaml` with all new image tags in one commit, avoiding race conditions.
 
-![CI pipeline — all 11 jobs green](assets/screenshots/CI_ran_successfully.png)
+![CI pipeline — all 11 jobs green](assets/screenshots/CI%20ran%20successfully.png)
 
-![Full workflow history showing debugging journey](assets/screenshots/succcessful_workflows_and_failed_workflows.png)
+![Full workflow history showing debugging journey](assets/screenshots/succcessful%20workflows%20and%20failed%20workflows.png)
 
-![ECR repositories — all 11 services](assets/screenshots/ecr_repositories.png)
+![ECR repositories — all 11 services](assets/screenshots/ecr%20repositories.png)
 
 Required GitHub secrets:
 
@@ -164,9 +164,9 @@ Required GitHub secrets:
 
 ArgoCD is installed on the cluster and watches the `main` branch. Any change merged to main — including the automated image tag updates from CI — triggers an automatic sync to the cluster.
 
-![ArgoCD — all services synced and healthy](assets/screenshots/argocd_up_and_active.png)
+![ArgoCD — all services synced and healthy](assets/screenshots/argocd%20up%20and%20active.png)
 
-![ArgoCD network view showing load balancer to pods](assets/screenshots/argocd_application_details.png)
+![ArgoCD network view showing load balancer to pods](assets/screenshots/argocd%20application%20details.png)
 
 Install ArgoCD:
 
@@ -202,9 +202,9 @@ helm install prometheus prometheus-community/kube-prometheus-stack \
   --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false
 ```
 
-![Grafana dashboard — node metrics](assets/screenshots/grafana_1.png)
+![Grafana dashboard — node metrics](assets/screenshots/grafana%201.png)
 
-![Prometheus targets scraping](assets/screenshots/prometheus_data_scrapping.png)
+![Prometheus targets scraping](assets/screenshots/prometheus%20data%20scrapping.png)
 
 Access Grafana locally:
 
@@ -230,11 +230,11 @@ This project ran into real engineering problems. Here is what broke and how it w
 
 Before fix — cart service unreachable:
 
-![500 error before pod scheduling fix](assets/screenshots/alb_not_working.png)
+![500 error before pod scheduling fix](assets/screenshots/alb%20not%20working.png)
 
 After fix — all services healthy:
 
-![Live site working on AWS ELB](assets/screenshots/site_deployed_online_via_alb.png)
+![Live site working on AWS ELB](assets/screenshots/site%20deployed%20online%20via%20alb.png)
 
 **EKS authentication failure** — `kubectl` returned credential errors after cluster recreation. Fixed by running `aws eks update-kubeconfig` to refresh the local kubeconfig.
 
@@ -285,7 +285,7 @@ helm uninstall prometheus -n monitoring
 cd terraform && terraform destroy
 ```
 
-![Terraform destroy complete — 54 resources deleted](assets/screenshots/terraform_destroy_completed.png)
+![Terraform destroy complete — 54 resources deleted](assets/screenshots/terraform%20destroy%20completed.png)
 
 Delete ECR repositories manually if no longer needed.
 
